@@ -1,0 +1,20 @@
+- name: add cross account visit policy for alexrhino ecs
+  ecs_ecr:
+    name: "{{ item }}"
+    policy: "{{ lookup('template', 'cross_accounts_policy.json.j2') }}"
+  environment:
+    AWS_REGION: "{{ repo_region }}" 
+    AWS_PROFILE: "{{ aws_profile }}"
+  with_items: "{{ repo_list }}"
+  tags:
+    - ecr
+
+- name: add cross account visit policy for alexrhino ecs
+  ecs_ecr:
+    name: "{{ repo_name }}"
+    policy: "{{ lookup('template', 'cross_accounts_policy.json.j2') }}"
+  environment:
+    AWS_REGION: "{{ repo_region }}" 
+    AWS_PROFILE: "{{ aws_profile }}"
+  tags:
+    - ecr_add

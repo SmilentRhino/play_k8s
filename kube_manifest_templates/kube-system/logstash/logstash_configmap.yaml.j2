@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+    {% for key, value in data.data.items() %}
+  "{{ key }}": |
+    {{ value|indent(4, False) }}
+    {% endfor %}
+kind: ConfigMap
+metadata:
+  name: {{ data.configmap_name }}
+  namespace: {{ data.namespace }}

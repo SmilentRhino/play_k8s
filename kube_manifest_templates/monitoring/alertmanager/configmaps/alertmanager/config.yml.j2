@@ -1,0 +1,24 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'email-smtp.us-east-1.amazonaws.com:25'
+  smtp_from: 'smilentrhino@163.com'
+  smtp_auth_username: 11111111111111111111
+  smtp_auth_password: 11111111111111111111111111111111111111111111
+
+templates:
+- '/etc/alertmanager-templates/*.tmpl'
+route:
+  group_by: ['alertname', 'cluster', 'service', 'example']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 15m
+  receiver: email_alert
+  routes:
+  - match:
+      severity: page
+    receiver: email_alert
+receivers:
+- name: 'email_alert'
+  email_configs:
+  - to: 'smilentrhino@163.com'
+    send_resolved: true

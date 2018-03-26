@@ -1,0 +1,13 @@
+groups:
+- name: sample_application-probe
+  rules:
+{%- raw %}
+  - alert: SampleApplicationPRobe 
+    expr: probe_success < 1
+    for: 2m
+    labels:
+      serverity: page
+    annotations:
+      summary: "{{$labels.instance}}: SampleApplication Probe faield"
+      description: "{{$labels.instance}}: SampleApplication probe fail (current value is: {{ $value }})"
+{% endraw %}

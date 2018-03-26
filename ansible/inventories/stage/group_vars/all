@@ -1,0 +1,16 @@
+AWS_PROFILE_DEV: alexrhino-dev
+aws_profile: alexrhino-dev
+sqs_default_queues:
+  - sample_application-default-letter-stage-queue
+sqs_regions:
+  - ap-southeast-2
+  - ap-northeast-1
+  - us-east-1
+  - ap-southeast-1
+  - eu-central-1
+sqs_retry_queues:
+  - sample_application-retry-stage-queue
+runtime_env: stage
+aws_account: 111111111111
+k8s_nodes_roles:
+  - nodes.alexrhino.k8s.local 

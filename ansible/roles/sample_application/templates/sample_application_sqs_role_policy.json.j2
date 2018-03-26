@@ -1,0 +1,28 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    },
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+{% for role in k8s_nodes_roles %}
+          "arn:aws:iam::{{ aws_account }}:role/{{ role }}"
+{% if not loop.last %}
+    ,
+{% endif %}
+{% endfor %}
+        ]
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}

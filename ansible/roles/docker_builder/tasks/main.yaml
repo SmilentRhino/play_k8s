@@ -1,0 +1,70 @@
+- name: ensure kube dev config is updated
+  copy:
+    content: |
+        {{ kubecfg_stage }}
+    dest: "/home/{{ jenkins_builder }}/.kube/config_new_stage"
+    owner: "{{ jenkins_builder }}"
+    group: "{{ jenkins_builder }}"
+    mode: 0644
+  tags:
+    - kube_config
+    
+- name: ensure kube dev config is updated
+  copy:
+    content: |
+        {{ kubecfg_dev }}
+    dest: "/home/{{ jenkins_builder }}/.kube/config_new_dev"
+    owner: "{{ jenkins_builder }}"
+    group: "{{ jenkins_builder }}"
+    mode: 0600
+  tags:
+    - kube_config
+
+- name: ensure kube test config is updated
+  copy:
+    content: |
+        {{ kubecfg_dev }}
+    dest: "/home/{{ jenkins_builder }}/.kube/config_new_test"
+    owner: "{{ jenkins_builder }}"
+    group: "{{ jenkins_builder }}"
+    mode: 0600
+  tags:
+    - kube_config
+
+ 
+- name: ensure kube prod config is updated
+  copy:
+    content: |
+        {{ kubecfg_prod }}
+    dest: "/home/{{ jenkins_builder }}/.kube/config_new_prod"
+    owner: "{{ jenkins_builder }}"
+    group: "{{ jenkins_builder }}"
+    mode: 0600
+  tags:
+    - kube_config
+ 
+- name: ensure requirements.txt exists
+  copy:
+    src: "{{ role_path }}/files/requirements.txt"
+    dest: "/home/{{ jenkins_builder }}/pyenv/versions/k8s_py/requirements.txt"
+  tags:
+    - pip_file
+
+- name: ensure all requirement install in k8s_py virtualenv
+  pip:
+    requirements: "/home/{{ jenkins_builder }}/pyenv/versions/k8s_py/requirements.txt"
+    virtualenv: "/home/{{ jenkins_builder }}/pyenv/versions/k8s_py/"
+  tags:
+    - pip
+    - python
+
+- name: ensure all requirement install in ansible virtualenv
+  pip:
+    name: "{{ item }}"
+    virtualenv: "/home/{{ jenkins_builder }}/pyenv/versions/ansible/"
+  with_items:
+    - ansible
+    - boto3
+  tags:
+    - pip
+    - python

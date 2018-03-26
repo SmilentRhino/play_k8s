@@ -1,0 +1,23 @@
+input {
+    file {
+        path => "/var/log/containers_log/alexrhino-deployment-*alexrhino-service-log*.log"
+        tags => [ "alexrhino-service-log" ]
+        start_position => "beginning"
+    }
+    file {
+        path => "/var/log/containers_log/alexrhino-deployment-*alexrhino*.log"
+        exclude => "/var/log/containers_log/alexrhino-deployment-*alexrhino-service-log*.log"
+        tags => [ "alexrhino-nginx-log" ]
+        start_position => "beginning"
+    }
+}
+
+output {
+    redis {
+        host => "elk-cache.alexrhino.net"
+        port => "6379"
+        data_type => "list"
+        key => "alexrhino"
+        codec => "json"
+    }
+}

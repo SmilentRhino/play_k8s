@@ -1,0 +1,72 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: logstash
+  name: logstash-ds
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - env:
+        - name: XPACK_MONITORING_ENABLED
+          value: "false"
+        - name: JAVA_OPTS
+          value: -Xms128m -Xmx128m -XX:MaxPermSize=64m
+{%- if data.runtime_env == 'dev' %}
+        - name: LOG_LEVEL
+          value: debug
+{%- endif %}
+        image: "111111111111.dkr.ecr.us-east-1.amazonaws.com/logstash:5.6.3"
+        imagePullPolicy: IfNotPresent
+        name: logstash
+        resources:
+          limits:
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - mountPath: /var/log/containers_log
+          name: varlog
+          readOnly: true
+        - mountPath: /var/log/pods
+          name: podlog
+          readOnly: true
+        - mountPath: /var/lib/docker/containers/
+          name: varlibdockercontainers
+          readOnly: true
+        - mountPath: /usr/share/logstash/config
+          name: config-volume
+        - mountPath: /usr/share/logstash/pipeline
+          name: pipeline-volume
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - hostPath:
+          path: /var/log/containers
+        name: varlog
+      - hostPath:
+          path: /var/log/pods
+        name: podlog
+      - hostPath:
+          path: /var/lib/docker/containers
+        name: varlibdockercontainers
+      - configMap:
+          defaultMode: 511
+          name: logstash-config
+        name: config-volume
+      - configMap:
+          defaultMode: 511
+          name: logstash-pipeline
+        name: pipeline-volume

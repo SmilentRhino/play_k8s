@@ -1,0 +1,59 @@
+- name: update sample_application default letter sqs queues
+  sqs_queue:
+    name: "{{ item[0] }}"
+    region: "{{ item[1] }}"
+    profile: "{{ aws_profile }}"
+    default_visibility_timeout: 120
+    message_retention_period: 345600 
+    maximum_message_size: 262144
+#Delivery deplay is 0 by default, ansible fail to set deliver delay
+#        delivery_delay: '0'
+    receive_message_wait_time: 0
+  with_nested:
+    - "{{ sqs_default_queues }}"
+    - "{{ sqs_regions }}"
+#    - [ "sample_application-default-letter-dev-queue", "sample_application-default-letter-test-queue", "sample_application-default-letter-stage-queue" ]
+#    - [ 'ap-southeast-2', 'ap-northeast-1', 'us-east-1', 'ap-southeast-1', 'eu-central-1' ]
+  tags:
+    - sample_application-sqs
+- name: update sample_application sqs retry queues
+  sqs_queue:
+    name: "{{ item[0] }}"
+    region: "{{ item[1] }}"
+    profile: "{{ aws_profile }}"
+    default_visibility_timeout: 30
+    message_retention_period: 345600 
+    maximum_message_size: 262144
+    delivery_delay: 900 
+    receive_message_wait_time: 0
+  with_nested:
+    - "{{ sqs_retry_queues }}"
+    - "{{ sqs_regions }}"
+#
+#    - [ "sample_application-retry-dev-queue", "sample_application-retry-test-queue", "sample_application-retry-stage-queue" ]
+#    - [ 'ap-southeast-2', 'ap-northeast-1', 'us-east-1', 'ap-southeast-1', 'eu-central-1' ]
+  tags:
+    - sample_application-sqs
+    - dev
+
+- name: create sample_application access sqs policy
+  iam_managed_policy:
+    policy_name: "sample_application-access-sqs-{{ runtime_env }}"
+    policy_description: "A policy for alexrhino sample_application to access {{ runtime_env }} sqs"
+    policy: "{{ lookup('template', 'sample_application_access_sqs_policy.json.j2') }}"
+    state: present
+  environment:
+    AWS_PROFILE: "{{ aws_profile }}"
+  tags:
+    - sample_application-sqs-role
+
+- name: create sample_application access sqs role
+  iam_role:
+    name: sample_application-access-sqs-{{ runtime_env }}-role
+    profile: "{{ aws_profile }}"
+    assume_role_policy_document: "{{ lookup('template','sample_application_access_sqs_role_policy.json.j2') }}"
+    state: present
+    managed_policy:
+      - "arn:aws:iam::{{ aws_account }}:policy/sample_application-access-sqs-{{ runtime_env }}"
+  tags:
+    - sample_application-sqs-role

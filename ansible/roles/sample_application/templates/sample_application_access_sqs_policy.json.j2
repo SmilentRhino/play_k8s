@@ -1,0 +1,28 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sqs:DeleteMessage",
+                "sqs:GetQueueUrl",
+                "sqs:ChangeMessageVisibility",
+                "sqs:SendMessageBatch",
+                "sqs:ReceiveMessage",
+                "sqs:SendMessage",
+                "sqs:GetQueueAttributes",
+                "sqs:RemovePermission",
+                "sqs:AddPermission",
+                "sqs:ListDeadLetterSourceQueues",
+                "sqs:DeleteMessageBatch",
+                "sqs:PurgeQueue",
+                "sqs:ChangeMessageVisibilityBatch",
+                "sqs:SetQueueAttributes"
+            ], 
+            "Resource": [
+                "arn:aws:sqs:*:{{ aws_account }}:sample_application-default-letter-{{ runtime_env }}-queue",
+                "arn:aws:sqs:*:{{ aws_account }}:sample_application-retry-{{ runtime_env }}-queue"
+            ]
+        }
+    ]
+}

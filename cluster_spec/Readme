@@ -1,0 +1,6 @@
+1. Example to get prod cluster spec
+   export KOPS_STATE_STORE=s3://alexrhino-cluster
+   kops get clusters
+   kops get --name alexrhino.k8s.local -o yaml >alexrhino.k8s.local.yaml
+
+2. Everytime you update the cluster spec, please export it here and use git diff.

@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: python 
+  namespace: {{ data.namespace }}
+spec:
+  replicas: 0
+  template:
+    metadata:
+      annotations:
+        iam.amazonaws.com/role: nodes.alexrhino.k8s.local 
+      labels:
+        app: python
+    spec:
+      containers:
+      - name: python
+        image: 111111111111.dkr.ecr.us-east-1.amazonaws.com/python:httpie.0.9.8

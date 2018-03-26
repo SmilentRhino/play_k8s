@@ -1,0 +1,50 @@
+apiVersion: apps/v1beta1 
+kind: Deployment
+metadata:
+  name: monitoring-prometheus
+  namespace: {{ data.namespace }} 
+  annotations:
+    mytest: mytest
+spec:
+  replicas: "1"
+  template:
+    metadata:
+      labels:
+        task: monitoring
+        name: prometheus
+    spec:
+      serviceAccountName: prometheus
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 2000
+      containers:
+      - name: prometheus
+        image: prom/prometheus 
+        args:
+          - --web.external-url=http://localhost:8001/api/v1/namespaces/monitoring/services/monitoring-prometheus/proxy/
+          - --web.route-prefix=/
+          - --config.file=/etc/prometheus/prometheus.yml
+          - --log.level=debug
+        volumeMounts:
+        - mountPath: /prometheus 
+          name: prometheus-storage
+        - name: config-volume
+          mountPath: /etc/prometheus
+        - name: rules-volume
+          mountPath: /etc/prometheus-rules
+#        - name: ssl-certs
+#          mountPath: /etc/ssl/certs/ca-certificates.crt
+#          readOnly: true
+      volumes:
+      - name: prometheus-storage
+        persistentVolumeClaim:
+          claimName: prometheus-claim
+      - name: config-volume
+        configMap:
+          name: prometheus-configmap
+      - name: rules-volume
+        configMap:
+          name: prometheus-rules
+#      - name: ssl-certs
+#        hostPath:
+#          path: "/etc/ssl/certs/ca-certificates.crt"

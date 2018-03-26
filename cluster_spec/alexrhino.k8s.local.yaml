@@ -1,0 +1,135 @@
+apiVersion: kops/v1alpha2
+kind: Cluster
+metadata:
+  creationTimestamp: 2015-01-01T07:07:09Z
+  name: alexrhino.k8s.local
+spec:
+  additionalPolicies:
+    node: |
+      [
+        {
+        "Effect": "Allow",
+        "Action": [
+            "autoscaling:DescribeAutoScalingGroups",
+            "autoscaling:DescribeAutoScalingInstances",
+            "autoscaling:SetDesiredCapacity",
+            "autoscaling:TerminateInstanceInAutoScalingGroup"
+        ],
+        "Resource": ["*"]
+        },
+        {
+          "Action": [
+            "sts:AssumeRole"
+          ],
+          "Effect": "Allow",
+          "Resource": ["*"]
+        }
+      ]
+  api:
+    loadBalancer:
+      type: Public
+  authorization:
+    rbac: {}
+  channel: stable
+  cloudProvider: aws
+  configBase: s3://alexrhino-state-store/alexrhino.k8s.local
+  etcdClusters:
+  - etcdMembers:
+    - encryptedVolume: true
+      instanceGroup: master-us-east-1a
+      name: a
+    name: main
+  - etcdMembers:
+    - encryptedVolume: true
+      instanceGroup: master-us-east-1a
+      name: a
+    name: events
+  kubernetesApiAccess:
+  - 0.0.0.0/0
+  kubernetesVersion: 1.7.2
+  masterInternalName: api.internal.alexrhino.k8s.local
+  masterPublicName: api.alexrhino.k8s.local
+  networkCIDR: 10.0.8.0/22
+  networkID: vpc-11111111
+  networking:
+    flannel: {}
+  nonMasqueradeCIDR: 100.64.0.0/10
+  sshAccess:
+  - 0.0.0.0/0
+  subnets:
+  - cidr: 10.0.8.0/24
+    egress: nat-11111111111111111
+    id: subnet-11111111
+    name: us-east-1a
+    type: Private
+    zone: us-east-1a
+  - cidr: 10.0.9.0/24
+    egress: nat-22222222222222222
+    id: subnet-22222222
+    name: us-east-1b
+    type: Private
+    zone: us-east-1b
+  - cidr: 10.0.10.0/24
+    egress: nat-33333333333333333
+    id: subnet-33333333
+    name: us-east-1c
+    type: Private
+    zone: us-east-1c
+  - cidr: 10.0.11.0/27
+    id: subnet-44444444
+    name: utility-us-east-1a
+    type: Utility
+    zone: us-east-1a
+  - cidr: 10.0.11.32/27
+    id: subnet-55555555
+    name: utility-us-east-1b
+    type: Utility
+    zone: us-east-1b
+  - cidr: 10.0.11.64/27
+    id: subnet-66666666
+    name: utility-us-east-1c
+    type: Utility
+    zone: us-east-1c
+  topology:
+    dns:
+      type: Public
+    masters: private
+    nodes: private
+
+---
+
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: 2017-11-21T07:07:11Z
+  labels:
+    kops.k8s.io/cluster: alexrhino.k8s.local
+  name: master-us-east-1a
+spec:
+  image: kope.io/k8s-1.7-debian-jessie-amd64-hvm-ebs-2017-07-28
+  machineType: m4.large
+  maxSize: 1
+  minSize: 1
+  role: Master
+  subnets:
+  - us-east-1a
+
+---
+
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimesramp: 2015-11-21T07:07:12Z
+  labels:
+    kops.k8s.io/cluster: alexrhino.k8s.local
+  name: nodes
+spec:
+  image: kope.io/k8s-1.7-debian-jessie-amd64-hvm-ebs-2017-07-28
+  machineType: m4.xlarge
+  maxSize: 6
+  minSize: 3
+  role: Node
+  subnets:
+  - us-east-1a
+  - us-east-1b
+  - us-east-1c

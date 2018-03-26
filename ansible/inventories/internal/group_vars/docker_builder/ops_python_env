@@ -1,0 +1,12 @@
+pyenv_path: "/home/ubuntu/pyenv"
+pyenv_owner: "ubuntu"
+pyenv_update_git_install: no
+pyenv_enable_autocompletion: no
+pyenv_python_versions:
+   - "3.4.3"
+   - "2.7.6"
+pyenv_virtualenvs:
+   - venv_name: "k8s_py"
+     py_version: '3.4.3'
+   - venv_name: "ansible"
+     py_version: '2.7.6'

@@ -1,0 +1,34 @@
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+
+        root /usr/share/nginx/html;
+        index index.html index.html;
+
+        add_header Public-Key-Pins 'pin-sha256="11111111111111111111111111111111111111111111";
+          pin-sha256="22222222222222222222222222222222222222222222";
+          pin-sha256="33333333333333333333333333333333333333333333";
+          max-age=76186000; includeSubDomains';
+
+        # Make site accessible from http://localhost/
+        server_name localhost;
+
+        location /sample-application/ {
+            index  index.html index.html;
+            proxy_pass http://localhost:8080;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header Host $http_host;
+            client_max_body_size 2500m;
+            proxy_buffering on;
+            proxy_buffers 8 8k;
+        }
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+                # Uncomment to enable naxsi on this location
+                # include /etc/nginx/naxsi.rules
+        }
+}

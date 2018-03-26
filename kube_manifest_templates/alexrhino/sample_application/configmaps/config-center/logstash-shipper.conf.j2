@@ -1,0 +1,24 @@
+input {
+    file {
+        type => "sample_application-service-log"
+        path => "/var/log/sample_application/sample_application-service.log"
+        tags => [ "sample_application-service-log", "sample_application-service-{{ data.runtime_env }}" ]
+        start_position => "beginning"
+        codec => multiline {
+          # Grok pattern names are valid! :)
+          pattern => "^%{TIMESTAMP_ISO8601} "
+          negate => true
+          what => "previous"
+        }
+    }
+}
+
+output {
+    redis {
+        host => "elk-cache.alexrhino.net"
+        port => "6379"
+        data_type => "list"
+        key => "alexrhino"
+        codec => "json"
+    }
+}

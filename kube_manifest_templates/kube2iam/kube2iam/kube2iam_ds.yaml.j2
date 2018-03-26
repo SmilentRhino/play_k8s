@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: kube2iam
+  namespace: {{ data.namespace }}
+  labels:
+    app: kube2iam
+spec:
+  template:
+    metadata:
+      labels:
+        name: kube2iam
+    spec:
+      hostNetwork: true
+      containers:
+        - image: 111111111111.dkr.ecr.us-east-1.amazonaws.com/kube2iam:0.9.0 
+          name: kube2iam
+          args:
+{%- if data.runtime_env == 'prod' %}
+            - "--base-role-arn=arn:aws:iam::222222222222:role/"
+{%- else %}
+            - "--base-role-arn=arn:aws:iam::111111111111:role/"
+{%- endif %}
+            - "--iptables=true"
+            - "--host-ip=$(HOST_IP)"
+            - "--host-interface=cni0"
+            - "--namespace-restrictions"
+            - "--default-role=nodes.alexrhino.k8s.local"
+            - "--debug"
+            - "--verbose"
+          env:
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          ports:
+            - containerPort: 8181
+              hostPort: 8181
+              name: http
+          securityContext:
+            privileged: true
+      serviceAccountName: kube2iam

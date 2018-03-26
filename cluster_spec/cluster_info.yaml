@@ -1,0 +1,1236 @@
+dev:
+  vir:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+          - service: influxdb
+            type:
+              - pvc
+              - deployment
+              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+          - service: blackbox_exporter
+            type:
+              - deploy
+              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+          - service: kapacitor
+            type:
+              - namespace
+              - pvc
+              - deployment
+              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+  fra:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+# Use influxdb only in dev
+#          - service: influxdb
+#            type:
+#              - pvc
+#              - deployment
+#              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+#No black box in fra yet
+#          - service: blackbox_exporter
+#            type:
+#              - deploy
+#              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#No kapacitor in fra yet
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+test:
+  vir:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+  fra:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+
+stage:
+  vir: 
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+          - service: influxdb
+            type:
+              - pvc
+              - deployment
+              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+          - service: blackbox_exporter
+            type:
+              - deploy
+              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+  fra:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+# Use influxdb only in vir
+#          - service: influxdb
+#            type:
+#              - pvc
+#              - deployment
+#              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+#No black box in fra yet
+#          - service: blackbox_exporter
+#            type:
+#              - deploy
+#              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#No kapacitor in fra yet
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+  sin:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+# Use influxdb only in vir
+#          - service: influxdb
+#            type:
+#              - pvc
+#              - deployment
+#              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+#No black box in fra yet
+#          - service: blackbox_exporter
+#            type:
+#              - deploy
+#              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#No kapacitor in fra yet
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+  syd:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+# Use influxdb only in vir
+#          - service: influxdb
+#            type:
+#              - pvc
+#              - deployment
+#              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+#No black box in fra yet
+#          - service: blackbox_exporter
+#            type:
+#              - deploy
+#              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#No kapacitor in fra yet
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+  tyo:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+# Use influxdb only in vir
+#          - service: influxdb
+#            type:
+#              - pvc
+#              - deployment
+#              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+#No black box in fra yet
+#          - service: blackbox_exporter
+#            type:
+#              - deploy
+#              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#No kapacitor in fra yet
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+prod:
+  vir:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+          - service: influxdb
+            type:
+              - pvc
+              - deployment
+              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+#No blackbox_exporter in prod
+#          - service: blackbox_exporter
+#            type:
+#              - deploy
+#              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#No kapacitor in prod
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+  fra:
+    context: alexrhio.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+# Use influxdb only in vir
+#          - service: influxdb
+#            type:
+#              - pvc
+#              - deployment
+#              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+#No black box in fra yet
+#          - service: blackbox_exporter
+#            type:
+#              - deploy
+#              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#No kapacitor in fra yet
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+  sin:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+# Use influxdb only in vir
+#          - service: influxdb
+#            type:
+#              - pvc
+#              - deployment
+#              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+#No black box in fra yet
+#          - service: blackbox_exporter
+#            type:
+#              - deploy
+#              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#No kapacitor in fra yet
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+  syd:
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+# Use influxdb only in vir
+#          - service: influxdb
+#            type:
+#              - pvc
+#              - deployment
+#              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+#No black box in fra yet
+#          - service: blackbox_exporter
+#            type:
+#              - deploy
+#              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#No kapacitor in fra yet
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service
+  tyo: 
+    context: alexrhino.k8s.local
+    manifests:
+      - namespace: kube-system
+        services:
+          - service: autoscaler
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+          - service: kube_state_metrics
+            type:
+              - clusterrolebinding
+              - clusterrole
+              - role
+              - rolebinding
+              - sc 
+              - deploy
+              - svc
+# Use influxdb only in vir
+#          - service: influxdb
+#            type:
+#              - pvc
+#              - deployment
+#              - service
+          - service: grafana
+            type:
+              - pvc
+              - deploy
+              - service
+          - service: logstash
+            type:
+              - clusterolebingding
+              - clusterole
+              - configmap
+              - sc 
+              - ds
+          - service: heapster
+            type:
+              - clusterrolebinding
+              - sc 
+              - deployment
+              - service
+      - namespace: kube2iam
+        services:
+          - service: kube2iam
+            type:
+              - namespace
+              - cluster_role
+              - cluster_rolebinding
+              - sc
+              - ds
+      - namespace: monitoring
+        services:
+          - service: node_exporter
+            type:
+              - namespace
+              - ds
+              - service
+          - service: node_problem_detector
+            type:
+              - ds
+          - service: prometheus
+            type:
+              - clusterrole
+              - clusterrolebinding
+              - sc
+              - pvc
+              - configmap
+              - deploy
+              - service 
+#No black box in fra yet
+#          - service: blackbox_exporter
+#            type:
+#              - deploy
+#              - svc
+          - service: alertmanager
+            type:
+              - configmap
+              - deploy
+              - svc
+#No kapacitor in fra yet
+#          - service: kapacitor
+#            type:
+#              - namespace
+#              - pvc
+#              - deployment
+#              - service
+      - namespace: alexrhino
+        services:
+          - service: sample_application
+            type:
+              - namespace
+              - configmap
+              - secrets
+              - deploy
+              - hpa
+              - service

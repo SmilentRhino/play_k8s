@@ -1,0 +1,60 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cluster-autoscaler
+  namespace: kube-system
+  labels:
+    app: cluster-autoscaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cluster-autoscaler
+  template:
+    metadata:
+      labels:
+        app: cluster-autoscaler
+#remove additional annotations as we use default kube2iam role now.
+#      annotations:
+#        iam.amazonaws.com/role: nodes.alexrhino.k8s.local 
+    spec:
+      serviceAccountName: cluster-autoscaler
+      containers:
+        - image: gcr.io/google_containers/cluster-autoscaler:v0.6.0
+          name: cluster-autoscaler
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 300Mi
+          command:
+            - ./cluster-autoscaler
+            - --v=4
+            - --stderrthreshold=info
+            - --cloud-provider=aws
+            - --skip-nodes-with-local-storage=false
+            - --nodes=3:6:nodes.alexrhino.k8s.local
+          env:
+            - name: AWS_REGION
+{%- if data.aws_region == 'vir' %}
+              value: us-east-1 
+{%- elif data.aws_region == 'fra' %}
+              value: eu-central-1
+{%- elif data.aws_region == 'sin' %}
+              value: ap-southeast-1 
+{%- elif data.aws_region == 'syd' %}
+              value: ap-southeast-2 
+{%- elif data.aws_region == 'tyo' %}
+              value: ap-northeast-1 
+{%- endif %}
+          volumeMounts:
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs/ca-certificates.crt
+              readOnly: true
+          imagePullPolicy: "Always"
+      volumes:
+        - name: ssl-certs
+          hostPath:
+            path: "/etc/ssl/certs/ca-certificates.crt"

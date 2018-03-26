@@ -1,0 +1,139 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: sample_application-deployment
+  namespace: {{ data.namespace }}
+spec:
+  replicas: 3
+  template:
+    metadata:
+      annotations:
+        iam.amazonaws.com/role: sample_application-access-sqs-{{ data.runtime_env }}-role
+      labels:
+        name: sample_application
+    spec:
+      imagePullSecrets:
+        - name: ecr-key
+      containers:
+        - name: sample_application
+          image: "111111111111.dkr.ecr.us-east-1.amazonaws.com/tomcat:0.0.1"
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 2 
+              memory: 2Gi
+            requests:
+              cpu: 700m 
+              memory: 1Gi
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /sample_application/heartbeat
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /sample_application/heartbeat
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 1
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /usr/local/sample_application/config-center/
+              name: vol-config-center
+            - mountPath: /usr/src/tomcat/webapps
+              name: apps
+            - mountPath: /var/log/sample_application
+              name: sample_application-service-log
+          command: ["/bin/sh"]
+          args: ["-c", "/usr/local/sample_application/onStart.sh {{ data.runtime_env }}"]
+          env:
+          - name: CATALINA_OPTS
+            value: -Xms512m -Xmx512m -XX:MaxPermSize=256m
+          - name: JAVA_OPTS
+{% if data.runtime_env == 'dev' %}
+            value: -Xms512m -Xmx512m -XX:MaxPermSize=256m -XX:NativeMemoryTracking=summary
+{% else %}
+            value: -Xms512m -Xmx512m -XX:MaxPermSize=256m
+{% endif %}
+          - name: NEW_RELIC_APP_NAME
+            value: ALEXRHINO_APP
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                key: newrelic_license
+                name: mysecret
+        - args:
+          - /bin/sh
+          - -c
+          - tail -n+1 -F /var/log/sample_application-service.log
+          image: busybox
+          imagePullPolicy: Always
+          name: sample_application-service-log
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100M 
+            requests:
+              cpu: 100m 
+              memory: 100M
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/log/
+            name: sample_application-service-log
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - cp newrelic.jar /apps/newrelic.jar && sleep 5
+        image: 111111111111.dkr.ecr.us-east-1.amazonaws.com/newrelic:20170130.0
+        imagePullPolicy: Always
+        name: copy-newrelic
+        resources: {}
+        volumeMounts:
+        - mountPath: /apps
+          name: apps
+      - command:
+        - sh
+        - -c
+        - cp sample_application.war /apps/sample_application.war && sleep 5
+        image: {{ data.extra_vars.image_url }}
+        imagePullPolicy: Always
+        name: copy-sample_application
+        resources: {}
+        volumeMounts:
+        - mountPath: /apps
+          name: apps
+      volumes:
+        - name: vol-config-center
+          configMap:
+            name: config-center
+            items:
+              - key: server.xml
+                path: server.xml
+              - key: nginx.conf
+                path: nginx.conf
+              - key: sample_application
+                path: sample_application
+              - key: sample_application.properties
+                path: sample_application.properties
+              - key: logstash-shipper.conf
+                path: logstash-shipper.conf
+              - key: newrelic.yml
+                path: newrelic.yml
+        - emptyDir:
+              sizeLimit: "0"
+          name: apps
+        - emptyDir:
+            sizeLimit: "0"
+          name: sample_application-service-log

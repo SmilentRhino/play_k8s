@@ -1,0 +1,9 @@
+repo_list: 
+  - logstash
+  - tomcat
+  - newrelic
+  - python
+  - kube2iam
+repo_name: python
+repo_region: us-east-1
+aws_profile: alexrhino-dev

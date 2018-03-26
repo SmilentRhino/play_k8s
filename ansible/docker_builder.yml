@@ -1,0 +1,4 @@
+- hosts: docker_builder 
+  roles:
+    - role: avanov.pyenv
+    - docker_builder
